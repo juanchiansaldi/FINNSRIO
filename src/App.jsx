@@ -1078,15 +1078,28 @@ function DisplayTitle({ parts, theme, className = '' }) {
 }
 
 function DishImage({ id, alt, className }) {
-  const src = PHOTOS[id];
-  if (!src) {
+  // Lookup order: 1) inline base64 in PHOTOS (legacy sushi photos), 2) /public/photos/{id}.jpg,
+  // 3) fallback gradient + ChefHat icon when the <img> errors out.
+  const inline = PHOTOS[id];
+  const fileUrl = BASE + `photos/${id}.jpg`;
+  const [errored, setErrored] = useState(false);
+
+  if (!inline && errored) {
     return (
       <div className={`flex items-center justify-center bg-gradient-to-br from-stone-800 via-stone-900 to-stone-950 ${className}`}>
         <ChefHat size={28} className="text-amber-200/30" strokeWidth={1.2}/>
       </div>
     );
   }
-  return <img src={src} alt={alt} className={className} loading="lazy"/>;
+  return (
+    <img
+      src={inline || fileUrl}
+      alt={alt}
+      className={className}
+      loading="lazy"
+      onError={() => setErrored(true)}
+    />
+  );
 }
 
 function DishCard({ dish, lang, t, theme }) {
