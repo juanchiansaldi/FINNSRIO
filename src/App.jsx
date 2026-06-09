@@ -1081,7 +1081,7 @@ function DishImage({ id, alt, className }) {
   // Lookup order: 1) inline base64 in PHOTOS (legacy sushi photos), 2) /public/photos/{id}.jpg,
   // 3) fallback gradient + ChefHat icon when the <img> errors out.
   const inline = PHOTOS[id];
-  const fileUrl = BASE + `photos/${id}.jpg`;
+  const fileUrl = BASE + `photos/${id}.webp`;
   const [errored, setErrored] = useState(false);
 
   if (!inline && errored) {
